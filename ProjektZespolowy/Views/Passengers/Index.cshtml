@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjektZespolowy.Models.Passenger>
+﻿@model IEnumerable<ProjektZespolowy.Models.Passengers.PassengerViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -11,9 +11,7 @@
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PublicId)
-        </th>
+        
         <th>
             @Html.DisplayNameFor(model => model.FirstName)
         </th>
@@ -25,18 +23,11 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.DocumentSerial)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserId)
-        </th>
-        <th></th>
+        </th>        
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.PublicId)
-        </td>
         <td>
             @Html.DisplayFor(modelItem => item.FirstName)
         </td>
@@ -50,12 +41,9 @@
             @Html.DisplayFor(modelItem => item.DocumentSerial)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.UserId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PassengerId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PassengerId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PassengerId })
+            @Html.ActionLink("Edit", "Edit", new { id=item.publicId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.publicId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.publicId })
         </td>
     </tr>
 }

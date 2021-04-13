@@ -4,6 +4,8 @@ using ProjektZespolowy.Models;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ProjektZespolowy.Models.AirPort;
+using ProjektZespolowy.Models.Passengers;
 
 namespace IdentitySample.Models
 {

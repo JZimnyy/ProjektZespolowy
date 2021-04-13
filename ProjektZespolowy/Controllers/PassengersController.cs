@@ -7,40 +7,75 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using IdentitySample.Models;
-using ProjektZespolowy.Models;
+using ProjektZespolowy.Models.Passengers;
 
 namespace ProjektZespolowy.Controllers
 {
     [Authorize]
-    public class PassengersController : Controller
+    public class PassengersController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
 
+        #region Index()
         // GET: Passengers
         public ActionResult Index()
         {
             var user = db.Users.Where(u => u.UserName == User.Identity.Name).First();
 
+            List<PassengerViewModel> passengerViewModels = new List<PassengerViewModel>();
+
             var passengers = db.Passengers.Where(p => p.User.Id == user.Id).ToList();
 
-            return View(passengers);
-        }
+            foreach(var passenger in passengers)
+            {
+                PassengerViewModel psg = new PassengerViewModel();
+                psg.FirstName = passenger.FirstName;
+                psg.LastName = passenger.LastName;
+                psg.DocumentSerial = passenger.DocumentSerial;
+                psg.PESEL = passenger.PESEL;
+                psg.publicId = passenger.PublicId;
 
+                passengerViewModels.Add(psg);
+            }
+
+            return View(passengerViewModels);
+        }
+        #endregion
+
+        #region Details()
         // GET: Passengers/Details/5
         public ActionResult Details(Guid? id)
         {
-            if (id == Guid.Empty)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Passenger passenger = db.Passengers.Find(id);
-            if (passenger == null)
-            {
-                return HttpNotFound();
-            }
-            return View(passenger);
-        }
+            try 
+            { 
+                if (id == Guid.Empty)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Passenger passenger = db.Passengers.Where(p => p.PublicId == id).First();
+                if (passenger == null)
+                {
+                    return HttpNotFound();
+                }
 
+                PassengerViewModel passengerViewModel = new PassengerViewModel
+                {
+                    FirstName = passenger.FirstName,
+                    LastName = passenger.LastName,
+                    publicId = passenger.PublicId,
+                    PESEL = passenger.PESEL,
+                    DocumentSerial = passenger.DocumentSerial
+                };
+
+                return View(passengerViewModel);
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
+        }
+        #endregion
+
+        #region Create()
         // GET: Passengers/Create
         public ActionResult Create()
         {
@@ -70,20 +105,31 @@ namespace ProjektZespolowy.Controllers
 
             return View(passenger);
         }
+        #endregion
 
+        #region Edit()
         // GET: Passengers/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(Guid? id)
         {
-            if (id == null)
+            if (id == Guid.Empty)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Passenger passenger = db.Passengers.Find(id);
+            Passenger passenger = db.Passengers.Where(p => p.PublicId == id).First();
             if (passenger == null)
             {
                 return HttpNotFound();
             }
-            return View(passenger);
+
+            PassengerFormModel passengerFormModel = new PassengerFormModel
+            {
+                FirstName = passenger.FirstName,
+                LastName = passenger.LastName,
+                PESEL = passenger.PESEL,
+                DocumentSerial = passenger.DocumentSerial,
+            };
+
+            return View(passengerFormModel);
         }
 
         // POST: Passengers/Edit/5
@@ -91,50 +137,81 @@ namespace ProjektZespolowy.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PassengerId,PublicId,FirstName,LastName,PESEL,DocumentSerial,UserId")] Passenger passenger)
+        public ActionResult Edit(Guid? id, [Bind(Include = "FirstName,LastName,PESEL,DocumentSerial")] PassengerFormModel passenger)
         {
-            if (ModelState.IsValid)
+            try { 
+                if (ModelState.IsValid)
+                {
+                    if (id == Guid.Empty)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    Passenger passengerToEdit = db.Passengers.Include(p=>p.User).Where(p => p.PublicId == id).First();
+                    if (passengerToEdit == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    passengerToEdit.FirstName = passenger.FirstName;
+                    passengerToEdit.LastName = passenger.LastName;
+                    passengerToEdit.PESEL = passenger.PESEL;
+                    passengerToEdit.DocumentSerial = passenger.DocumentSerial;
+               
+
+                    db.Entry(passengerToEdit).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(passenger);
+            } 
+            catch
             {
-                db.Entry(passenger).State = EntityState.Modified;
-                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(passenger);
         }
+        #endregion
 
+        #region Delete()
         // GET: Passengers/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(Guid? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            try { 
+                if (id == Guid.Empty)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Passenger passenger = db.Passengers.Include(p => p.User).Where(p => p.PublicId == id).First();
+                if (passenger == null)
+                {
+                    return HttpNotFound();
+                }
+
+                PassengerFormModel toDelete = new PassengerFormModel
+                {
+                    FirstName = passenger.FirstName,
+                    LastName = passenger.LastName,
+                    PESEL = passenger.PESEL,
+                    DocumentSerial = passenger.DocumentSerial
+                };
+
+                return View(toDelete);
             }
-            Passenger passenger = db.Passengers.Find(id);
-            if (passenger == null)
+            catch
             {
-                return HttpNotFound();
+                return RedirectToAction("Index");
             }
-            return View(passenger);
         }
 
         // POST: Passengers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(Guid id)
         {
-            Passenger passenger = db.Passengers.Find(id);
+            Passenger passenger = db.Passengers.Include(p => p.User).Where(p => p.PublicId == id).First();
             db.Passengers.Remove(passenger);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        #endregion 
     }
 }

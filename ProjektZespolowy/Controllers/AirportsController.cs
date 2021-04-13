@@ -127,7 +127,7 @@ namespace ProjektZespolowy.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Guid? id,[Bind(Include = "AirportId,PublicId,Name,Code")] Airport airport)
+        public ActionResult Edit(Guid? id,[Bind(Include = "AirportId,PublicId,Name,Code")] AirPortFormModel airport)
         {
             
             if (ModelState.IsValid)
@@ -170,7 +170,14 @@ namespace ProjektZespolowy.Controllers
                 {
                     return HttpNotFound();
                 }
-                return View(airport);
+
+                AirPortFormModel toDelete = new AirPortFormModel
+                {
+                    Name = airport.Name,
+                    Code = airport.Code
+                };
+
+                return View(toDelete);
             }
             catch{
                 return RedirectToAction("Index");

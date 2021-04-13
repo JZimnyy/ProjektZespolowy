@@ -1,4 +1,4 @@
-﻿@model ProjektZespolowy.Models.Passenger
+﻿@model ProjektZespolowy.Models.Passengers.PassengerFormModel
 
 @{
     ViewBag.Title = "Delete";
@@ -11,13 +11,7 @@
     <h4>Passenger</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.PublicId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PublicId)
-        </dd>
+        
 
         <dt>
             @Html.DisplayNameFor(model => model.FirstName)
@@ -49,14 +43,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.DocumentSerial)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserId)
         </dd>
 
     </dl>

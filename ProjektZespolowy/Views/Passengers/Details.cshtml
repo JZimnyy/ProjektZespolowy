@@ -1,4 +1,4 @@
-﻿@model ProjektZespolowy.Models.Passenger
+﻿@model ProjektZespolowy.Models.Passengers.PassengerViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -10,14 +10,7 @@
     <h4>Passenger</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.PublicId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PublicId)
-        </dd>
-
+        
         <dt>
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
@@ -50,17 +43,9 @@
             @Html.DisplayFor(model => model.DocumentSerial)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.PassengerId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.publicId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

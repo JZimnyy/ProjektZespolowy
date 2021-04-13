@@ -246,13 +246,14 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\AirLine.cs" />
-    <Compile Include="Models\Airport.cs" />
+    <Compile Include="Models\AirPort\Airport.cs" />
     <Compile Include="Models\AirPort\AirPortFormModel.cs" />
     <Compile Include="Models\AirRoute.cs" />
+    <Compile Include="Models\AutoMapperProfile.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Passenger\Passenger.cs" />
-    <Compile Include="Models\Passenger\PassengerFormModel.cs" />
+    <Compile Include="Models\Passengers\Passenger.cs" />
+    <Compile Include="Models\Passengers\PassengerFormModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
