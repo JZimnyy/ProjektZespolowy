@@ -27,9 +27,9 @@ namespace ProjektZespolowy.Controllers
         }
 
         // GET: Passengers/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(Guid? id)
         {
-            if (id == null)
+            if (id == Guid.Empty)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
