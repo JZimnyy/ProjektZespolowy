@@ -47,7 +47,7 @@ namespace ProjektZespolowy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Airport airport = db.Airports.Where(a => a.Code.Equals(code)).First();
+            Airport airport = db.Airports.FirstOrDefault(p=>p.Equals(code));
             if (airport == null)
             {
                 return HttpNotFound();

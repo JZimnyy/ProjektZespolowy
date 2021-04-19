@@ -220,6 +220,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AirLinesController.cs" />
     <Compile Include="Controllers\AirportsController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -245,7 +246,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
-    <Compile Include="Models\AirLine.cs" />
+    <Compile Include="Models\AirLines\AirLine.cs" />
+    <Compile Include="Models\AirLines\AirLineFormModel.cs" />
     <Compile Include="Models\AirPort\Airport.cs" />
     <Compile Include="Models\AirPort\AirPortFormModel.cs" />
     <Compile Include="Models\AirRoute.cs" />
@@ -336,6 +338,11 @@
     <Content Include="Views\Airports\Details.cshtml" />
     <Content Include="Views\Airports\Edit.cshtml" />
     <Content Include="Views\Airports\Index.cshtml" />
+    <Content Include="Views\AirLines\Create.cshtml" />
+    <Content Include="Views\AirLines\Delete.cshtml" />
+    <Content Include="Views\AirLines\Details.cshtml" />
+    <Content Include="Views\AirLines\Edit.cshtml" />
+    <Content Include="Views\AirLines\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
