@@ -15,6 +15,7 @@ namespace ProjektZespolowy.Models.Passengers
         public Guid PublicId { get; set; }
         [Required]
         [Display(Name ="Imię")]
+
         public string FirstName { get; set; }
         [Required]
         [Display(Name ="Nazwisko")]
