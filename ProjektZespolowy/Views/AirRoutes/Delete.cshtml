@@ -1,0 +1,56 @@
+﻿@model ProjektZespolowy.Models.AirRoute
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>AirRoute</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AirLine.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AirLine.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PublicId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PublicId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartAirportCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartAirportCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FinishAirportCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FinishAirportCode)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

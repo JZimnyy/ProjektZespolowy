@@ -19,7 +19,7 @@ namespace ProjektZespolowy.Controllers
         // GET: AirLines
         public ActionResult Index()
         {
-            List<AirLine> airLines = db.AirLines.ToList();
+            List<AirLine> airLines = db.AirLines.Include(p=>p.Routes).ToList();
 
             List<AirlineViewModel> airlineViewModels = new List<AirlineViewModel>();
 
@@ -53,7 +53,17 @@ namespace ProjektZespolowy.Controllers
             {
                 return HttpNotFound();
             }
-            return View(airLine);
+
+            AirlineViewModel model = new AirlineViewModel()
+            {
+                Name = airLine.Name,
+                Country = airLine.Country,
+                LinkToPage = airLine.LinkToPage,
+                PublicId = airLine.PublicId,
+                Routes = airLine.Routes
+            };
+
+            return View(model);
         }
         #endregion
 

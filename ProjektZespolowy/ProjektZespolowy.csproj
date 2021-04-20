@@ -222,6 +222,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AirLinesController.cs" />
     <Compile Include="Controllers\AirportsController.cs" />
+    <Compile Include="Controllers\AirRoutesController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -251,6 +252,7 @@
     <Compile Include="Models\AirPort\Airport.cs" />
     <Compile Include="Models\AirPort\AirPortFormModel.cs" />
     <Compile Include="Models\AirRoute.cs" />
+    <Compile Include="Models\AirRoutes\AirRouteFormModel.cs" />
     <Compile Include="Models\AutoMapperProfile.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -343,6 +345,11 @@
     <Content Include="Views\AirLines\Details.cshtml" />
     <Content Include="Views\AirLines\Edit.cshtml" />
     <Content Include="Views\AirLines\Index.cshtml" />
+    <Content Include="Views\AirRoutes\Create.cshtml" />
+    <Content Include="Views\AirRoutes\Delete.cshtml" />
+    <Content Include="Views\AirRoutes\Details.cshtml" />
+    <Content Include="Views\AirRoutes\Edit.cshtml" />
+    <Content Include="Views\AirRoutes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
