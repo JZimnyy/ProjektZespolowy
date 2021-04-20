@@ -22,7 +22,8 @@ namespace ProjektZespolowy.Models.AirPort
         [Index(IsUnique = true)]
         [StringLength(3)]
         public string Code { get; set; }
-
+        [Required]
+        public bool IsActive { get; set; }
         
     }
 }

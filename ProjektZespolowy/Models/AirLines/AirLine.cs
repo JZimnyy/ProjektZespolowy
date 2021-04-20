@@ -22,6 +22,8 @@ namespace ProjektZespolowy.Models
         [Display(Name="Link do strony")]
         [Url]
         public string LinkToPage { get; set; }
+        [Required]
+        public bool IsActive { get; set; }
 
         public virtual List<AirRoute> Routes { get; set; }
     }

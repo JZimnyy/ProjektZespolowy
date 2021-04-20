@@ -23,7 +23,7 @@ namespace ProjektZespolowy.Controllers
 
             List<PassengerViewModel> passengerViewModels = new List<PassengerViewModel>();
 
-            var passengers = db.Passengers.Where(p => p.User.Id == user.Id).ToList();
+            var passengers = db.Passengers.Where(p => p.User.Id == user.Id && p.IsActive == true).ToList();
 
             foreach(var passenger in passengers)
             {

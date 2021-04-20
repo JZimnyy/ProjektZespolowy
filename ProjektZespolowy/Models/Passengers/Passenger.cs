@@ -31,6 +31,9 @@ namespace ProjektZespolowy.Models.Passengers
         public int UserId { get; set; }
         [Required]
         public virtual ApplicationUser User { get; set; }
+
+        [Required]
+        public bool IsActive { get; set; }
         
 
     }

@@ -244,6 +244,10 @@
     <Compile Include="Migrations\202104131037429_Managementv1.Designer.cs">
       <DependentUpon>202104131037429_Managementv1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202104201128014_IsActive.cs" />
+    <Compile Include="Migrations\202104201128014_IsActive.Designer.cs">
+      <DependentUpon>202104201128014_IsActive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
@@ -251,7 +255,7 @@
     <Compile Include="Models\AirLines\AirLineFormModel.cs" />
     <Compile Include="Models\AirPort\Airport.cs" />
     <Compile Include="Models\AirPort\AirPortFormModel.cs" />
-    <Compile Include="Models\AirRoute.cs" />
+    <Compile Include="Models\AirRoutes\AirRoute.cs" />
     <Compile Include="Models\AirRoutes\AirRouteFormModel.cs" />
     <Compile Include="Models\AutoMapperProfile.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -377,6 +381,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104131037429_Managementv1.resx">
       <DependentUpon>202104131037429_Managementv1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104201128014_IsActive.resx">
+      <DependentUpon>202104201128014_IsActive.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
