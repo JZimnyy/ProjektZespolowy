@@ -19,7 +19,7 @@ namespace ProjektZespolowy.Controllers
         // GET: AirLines
         public ActionResult Index()
         {
-            List<AirLine> airLines = db.AirLines.Include(p=>p.Routes).ToList();
+            List<AirLine> airLines = db.AirLines.Include(p=>p.Routes).Where(p=>p.IsActive == true).ToList();
 
             List<AirlineViewModel> airlineViewModels = new List<AirlineViewModel>();
 
@@ -201,7 +201,9 @@ namespace ProjektZespolowy.Controllers
         public ActionResult DeleteConfirmed(Guid id)
         {
             AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId.Equals(id));
-            db.AirLines.Remove(airLine);
+            airLine.IsActive = false;
+
+            db.Entry(airLine).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

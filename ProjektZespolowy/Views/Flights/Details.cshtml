@@ -1,0 +1,66 @@
+﻿@model ProjektZespolowy.Models.Flight
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Flight</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AirRoute.StartAirportCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AirRoute.StartAirportCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PublicId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PublicId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfFreeSeats)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfFreeSeats)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DepartureDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DepartureDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ArrivalDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ArrivalDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.FlightId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

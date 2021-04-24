@@ -208,7 +208,9 @@ namespace ProjektZespolowy.Controllers
         public ActionResult DeleteConfirmed(Guid id)
         {
             Passenger passenger = db.Passengers.Include(p => p.User).Where(p => p.PublicId == id).First();
-            db.Passengers.Remove(passenger);
+            passenger.IsActive = false;
+
+            db.Entry(passenger).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

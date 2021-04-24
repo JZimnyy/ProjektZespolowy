@@ -45,5 +45,9 @@ namespace IdentitySample.Models
         public DbSet<AirLine> AirLines { get; set; }
         public DbSet<Airport> Airports { get; set; }
         public DbSet<AirRoute> AirRoutes { get; set; }
+
+        public System.Data.Entity.DbSet<ProjektZespolowy.Models.Flight> Flights { get; set; }
+
+        public System.Data.Entity.DbSet<ProjektZespolowy.Models.Ticket> Tickets { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace ProjektZespolowy.Controllers
         // GET: Airports
         public ActionResult Index()
         {
-            List<Airport> airports = db.Airports.ToList();
+            List<Airport> airports = db.Airports.Where(p=>p.IsActive == true).ToList();
 
             List<AirPortViewModel> airportsViewModel = new List<AirPortViewModel>();
 
@@ -190,7 +190,9 @@ namespace ProjektZespolowy.Controllers
         public ActionResult DeleteConfirmed(Guid id)
         {
             Airport airport = db.Airports.Where(a => a.PublicId == id).First();
-            db.Airports.Remove(airport);
+            airport.IsActive = false;
+
+            db.Entry(airport).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

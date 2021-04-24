@@ -18,7 +18,7 @@ namespace ProjektZespolowy.Controllers
         // GET: AirRoutes
         public ActionResult Index()
         {
-            var airRoutes = db.AirRoutes.Include(a => a.AirLine);
+            var airRoutes = db.AirRoutes.Include(a => a.AirLine).Where(p=>p.IsActive == true).ToList();
 
             List<AirRouteViewModel> model = new List<AirRouteViewModel>();
 
@@ -231,7 +231,9 @@ namespace ProjektZespolowy.Controllers
             }
 
             AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId.Equals(id));
-            db.AirRoutes.Remove(airRoute);
+            airRoute.IsActive = false;
+
+            db.Entry(airRoute).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
