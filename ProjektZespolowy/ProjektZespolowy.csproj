@@ -250,6 +250,10 @@
     <Compile Include="Migrations\202104201128014_IsActive.Designer.cs">
       <DependentUpon>202104201128014_IsActive.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202104241130188_TicketsFlight.cs" />
+    <Compile Include="Migrations\202104241130188_TicketsFlight.Designer.cs">
+      <DependentUpon>202104241130188_TicketsFlight.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
@@ -400,6 +404,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104201128014_IsActive.resx">
       <DependentUpon>202104201128014_IsActive.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104241130188_TicketsFlight.resx">
+      <DependentUpon>202104241130188_TicketsFlight.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
