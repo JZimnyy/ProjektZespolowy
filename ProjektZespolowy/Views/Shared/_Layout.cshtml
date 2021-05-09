@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Linie lotnicze</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -22,10 +22,17 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Linie lotnicze", "Index", "AirLines")</li>
+                    <li>@Html.ActionLink("Lotniska", "Index", "Airports")</li>
+                    <li>@Html.ActionLink("Trasy", "Index", "AirRoutes")</li>
+                    <li>@Html.ActionLink("Loty", "Index", "Flights")</li>
+                    <li>@Html.ActionLink("Pasażerowie", "Index", "Passengers")</li>
+                    <li>@Html.ActionLink("Bilety", "Index", "Tickets")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
 
-                    @if (Request.IsAuthenticated && User.IsInRole("Admin")) {
+                    @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                    {
                         <li>@Html.ActionLink("RolesAdmin", "Index", "RolesAdmin")</li>
                         <li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>
                     }
@@ -38,7 +45,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Linie lotnicze</p>
         </footer>
     </div>
 
