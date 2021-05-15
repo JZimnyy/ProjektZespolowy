@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -45,14 +46,14 @@ namespace ProjektZespolowy.Controllers
 
         #region Details()
         // GET: Flights/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(Guid id)
         {
-            if (id == string.Empty)
+            if (id == Guid.Empty)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Flight flight = db.Flights.FirstOrDefault(p => p.PublicId.Equals(id));
+            Flight flight = db.Flights.FirstOrDefault(p => p.PublicId==id);
 
             if (flight == null)
             {
@@ -78,7 +79,13 @@ namespace ProjektZespolowy.Controllers
         // GET: Flights/Create
         public ActionResult Create()
         {
-            ViewBag.AirRouteId = new SelectList(db.AirRoutes, "AirRouteId", "StartAirportCode");
+            var routes = db.AirRoutes.Select(x => new SelectListItem
+            {
+                Value = x.AirRouteId.ToString(),
+                Text = x.AirLine.Name + " " + x.StartAirportCode + "-" + x.FinishAirportCode
+            });
+
+            ViewBag.AirRouteId = new SelectList(routes, "Value", "Text");
             return View();
         }
 
@@ -91,34 +98,59 @@ namespace ProjektZespolowy.Controllers
         {
             try
             {
-            if (ModelState.IsValid)
-            {
-                if(!db.AirRoutes.Any(p=>p.AirRouteId == request.AirRouteId))
+                var routes = db.AirRoutes.Select(x => new SelectListItem
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    Value = x.AirRouteId.ToString(),
+                    Text = x.AirLine.Name + " " + x.StartAirportCode + "-" + x.FinishAirportCode
+                });
+
+                ViewBag.AirRouteId = new SelectList(routes, "Value", "Text");
+
+                if (ModelState.IsValid)
+                {
+                    if(!db.AirRoutes.Any(p=>p.AirRouteId == request.AirRouteId))
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+
+                    DateTime start = DateTime.Parse(request.DepartureDate, new CultureInfo("pl-PL"), DateTimeStyles.NoCurrentDateDefault);
+                    DateTime finish = DateTime.Parse(request.ArrivalDate, new CultureInfo("pl-PL"), DateTimeStyles.NoCurrentDateDefault);
+
+
+                    Flight flight = new Flight()
+                    {
+                        PublicId = Guid.NewGuid(),
+                        AirRouteId = request.AirRouteId,
+                        AirRoute = db.AirRoutes.Find(request.AirRouteId),
+                        NumberOfFreeSeats = request.NumberOfFreeSeats,
+                        DepartureDate = start,
+                        ArrivalDate = finish,
+                        Price = request.Price
+                    };
+
+                    if(flight.DepartureDate>=flight.ArrivalDate)
+                    {
+                        ViewBag.Error = "Niezgodne daty";
+                        return View(request);
+                    }
+
+                    db.Flights.Add(flight);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
                 }
 
-                Flight flight = new Flight()
-                {
-                    PublicId = Guid.NewGuid(),
-                    AirRouteId = request.AirRouteId,
-                    AirRoute = db.AirRoutes.Find(request.AirRouteId),
-                    NumberOfFreeSeats = request.NumberOfFreeSeats,
-                    DepartureDate = request.DepartureDate,
-                    ArrivalDate = request.ArrivalDate,
-                    Price = request.Price
-                };
-
-                db.Flights.Add(flight);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.AirRouteId = new SelectList(db.AirRoutes, "AirRouteId", "StartAirportCode", request.AirRouteId);
             return View(request);
             }
             catch
             {
+                var routes = db.AirRoutes.Select(x => new SelectListItem
+                {
+                    Value = x.AirRouteId.ToString(),
+                    Text = x.AirLine.Name + " " + x.StartAirportCode + "-" + x.FinishAirportCode
+                });
+
+                ViewBag.AirRouteId = new SelectList(routes, "Value", "Text");
+
                 return View(request);
             }
         }
@@ -126,14 +158,14 @@ namespace ProjektZespolowy.Controllers
 
         #region Edit()
         // GET: Flights/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(Guid id)
         {
-            if (id == string.Empty)
+            if (id == Guid.Empty)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Flight flight = db.Flights.FirstOrDefault(p => p.PublicId.Equals(id));
+            Flight flight = db.Flights.FirstOrDefault(p => p.PublicId == id);
 
             if (flight == null)
             {
@@ -144,12 +176,18 @@ namespace ProjektZespolowy.Controllers
             {
                 AirRouteId = flight.AirRouteId,
                 NumberOfFreeSeats = flight.NumberOfFreeSeats,
-                DepartureDate = flight.DepartureDate,
-                ArrivalDate = flight.ArrivalDate,
+                DepartureDate = flight.DepartureDate.ToString("yyyy-MM-dd hh:mm"),
+                ArrivalDate = flight.ArrivalDate.ToString("yyyy-MM-dd hh:mm"),
                 Price = flight.Price
             };
 
-            ViewBag.AirRouteId = new SelectList(db.AirRoutes, "AirRouteId", "StartAirportCode", model.AirRouteId);
+            var routes = db.AirRoutes.Select(x => new SelectListItem
+            {
+                Value = x.AirRouteId.ToString(),
+                Text = x.AirLine.Name + " " + x.StartAirportCode + "-" + x.FinishAirportCode
+            });
+
+            ViewBag.AirRouteId = new SelectList(routes, "Value", "Text",model.AirRouteId);
             return View(model);
         }
 
@@ -158,41 +196,63 @@ namespace ProjektZespolowy.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id,[Bind(Include = "AirRouteId,NumberOfFreeSeats,DepartureDate,ArrivalDate,Price")] FlightFormModel request)
+        public ActionResult Edit(Guid id,[Bind(Include = "AirRouteId,NumberOfFreeSeats,DepartureDate,ArrivalDate,Price")] FlightFormModel request)
         {
             try
             {
+                var routes = db.AirRoutes.Select(x => new SelectListItem
+                {
+                    Value = x.AirRouteId.ToString(),
+                    Text = x.AirLine.Name + " " + x.StartAirportCode + "-" + x.FinishAirportCode
+                });
+
+                ViewBag.AirRouteId = new SelectList(routes, "Value", "Text",request.AirRouteId);
+
                 if (ModelState.IsValid)
                 {
-                    if(db.AirRoutes.Any(p=>p.AirRouteId == request.AirRouteId))
+                    if(!db.AirRoutes.Any(p=>p.AirRouteId == request.AirRouteId))
                     {
                         return View(request);
                     }
 
-                    Flight flight = db.Flights.FirstOrDefault(p => p.PublicId.Equals(id));
+                    Flight flight = db.Flights.FirstOrDefault(p => p.PublicId ==id);
 
                     if(flight == null)
                     {
                         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                     }
 
+                    DateTime start = DateTime.Parse(request.DepartureDate, new CultureInfo("pl-PL"), DateTimeStyles.NoCurrentDateDefault);
+                    DateTime finish = DateTime.Parse(request.ArrivalDate, new CultureInfo("pl-PL"), DateTimeStyles.NoCurrentDateDefault);
+
                     flight.AirRouteId = request.AirRouteId;
                     flight.AirRoute = db.AirRoutes.Find(request.AirRouteId);
-                    flight.ArrivalDate = request.ArrivalDate;
-                    flight.DepartureDate = request.DepartureDate;
+                    flight.ArrivalDate = finish;
+                    flight.DepartureDate = start;
                     flight.NumberOfFreeSeats = request.NumberOfFreeSeats;
                     flight.Price = request.Price;
+
+                    if(flight.DepartureDate>=flight.ArrivalDate)
+                    {
+                        ViewBag.Error = "Niezgodne daty";
+                        return View(request);
+                    }
 
                     db.Entry(flight).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                ViewBag.AirRouteId = new SelectList(db.AirRoutes, "AirRouteId", "StartAirportCode", request.AirRouteId);
                 return View(request);
             }
-            catch
+            catch(Exception e)
             {
-                ViewBag.AirRouteId = new SelectList(db.AirRoutes, "AirRouteId", "StartAirportCode", request.AirRouteId);
+                var routes = db.AirRoutes.Select(x => new SelectListItem
+                {
+                    Value = x.AirRouteId.ToString(),
+                    Text = x.AirLine.Name + " " + x.StartAirportCode + "-" + x.FinishAirportCode
+                });
+                ViewBag.Error = "Błąd w formularzu!";
+                ViewBag.AirRouteId = new SelectList(routes, "Value", "Text",request.AirRouteId);
                 return View(request);
             }
         }
@@ -200,13 +260,13 @@ namespace ProjektZespolowy.Controllers
 
         #region Delete()
         // GET: Flights/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(Guid id)
         {
-            if (id == string.Empty)
+            if (id == Guid.Empty)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Flight flight = db.Flights.Include(p => p.AirRoute).FirstOrDefault(p => p.PublicId.Equals(id));
+            Flight flight = db.Flights.Include(p => p.AirRoute).FirstOrDefault(p => p.PublicId ==id);
             if (flight == null)
             {
                 return HttpNotFound();
@@ -229,13 +289,13 @@ namespace ProjektZespolowy.Controllers
         // POST: Flights/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+        public ActionResult DeleteConfirmed(Guid id)
         {
-            if (id == string.Empty)
+            if (id == Guid.Empty)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Flight flight = db.Flights.Include(p => p.AirRoute).FirstOrDefault(p => p.PublicId.Equals(id));
+            Flight flight = db.Flights.Include(p => p.AirRoute).FirstOrDefault(p => p.PublicId == id);
             db.Flights.Remove(flight);
             db.SaveChanges();
             return RedirectToAction("Index");

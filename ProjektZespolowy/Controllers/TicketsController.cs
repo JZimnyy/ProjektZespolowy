@@ -161,6 +161,7 @@ namespace ProjektZespolowy.Controllers
         }
         #endregion
 
+        #region Delete
         // GET: Tickets/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -186,6 +187,6 @@ namespace ProjektZespolowy.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        #endregion
     }
 }

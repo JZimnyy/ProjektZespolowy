@@ -1,30 +1,34 @@
-﻿@model IEnumerable<ProjektZespolowy.Models.Flight>
+﻿@model IEnumerable<ProjektZespolowy.Models.Flights.FlightViewModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Loty";
 }
 
 <h2>Loty</h2>
 
+@if (User.IsInRole("Admin")||User.IsInRole("Moderator"))
+{ 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Dodaj lot", "Create")
 </p>
+}
+
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.AirRoute.StartAirportCode)
+            @Html.DisplayName("Lotnisko startowe")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PublicId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NumberOfFreeSeats)
+            @Html.DisplayName("Lotnisko docelowe")
         </th>
         <th>
             @Html.DisplayNameFor(model => model.DepartureDate)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.ArrivalDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberOfFreeSeats)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Price)
@@ -38,10 +42,7 @@
             @Html.DisplayFor(modelItem => item.AirRoute.StartAirportCode)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.PublicId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NumberOfFreeSeats)
+            @Html.DisplayFor(modelItem => item.AirRoute.FinishAirportCode)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DepartureDate)
@@ -50,12 +51,27 @@
             @Html.DisplayFor(modelItem => item.ArrivalDate)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.NumberOfFreeSeats)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.Price)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.FlightId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.FlightId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.FlightId })
+            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+            {
+                <span>
+                    @Html.ActionLink("Edytuj", "Edit", new { id = item.PublicId }) |
+                </span>
+            }
+
+            @Html.ActionLink("Szczegóły", "Details", new { id = item.PublicId })
+            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+            {
+                <span>
+                    | @Html.ActionLink("Usuń", "Delete", new { id = item.PublicId })
+                </span>
+            }
+            
         </td>
     </tr>
 }

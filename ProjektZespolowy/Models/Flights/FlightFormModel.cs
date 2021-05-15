@@ -16,10 +16,13 @@ namespace ProjektZespolowy.Models.Flights
         public int NumberOfFreeSeats { get; set; }
         [Required]
         [Display(Name ="Data odlotu")]
-        public DateTime DepartureDate { get; set; }
+        [RegularExpression(@"(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})",ErrorMessage ="Błędny format daty")]
+        public string DepartureDate { get; set; }
         [Required]
         [Display(Name ="Data przylotu")]
-        public DateTime ArrivalDate { get; set; }
+        [RegularExpression(@"(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})", ErrorMessage = "Błędny format daty")]
+
+        public string ArrivalDate { get; set; }
         [Required]
         [Display(Name ="Cena")]
         public float Price { get; set; }
