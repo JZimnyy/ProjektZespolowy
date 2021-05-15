@@ -48,7 +48,7 @@ namespace ProjektZespolowy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId.Equals(id));
+            AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId ==id);
             if (airLine == null)
             {
                 return HttpNotFound();
@@ -92,7 +92,8 @@ namespace ProjektZespolowy.Controllers
                         Name = airLine.Name,
                         Country = airLine.Country,
                         LinkToPage = airLine.LinkToPage,
-                        PublicId = Guid.NewGuid()
+                        PublicId = Guid.NewGuid(),
+                        IsActive = true
                     };
 
                     db.AirLines.Add(newAirline);
@@ -118,7 +119,7 @@ namespace ProjektZespolowy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId.Equals(id));
+            AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId ==id);
             if (airLine == null)
             {
                 return HttpNotFound();
@@ -150,7 +151,7 @@ namespace ProjektZespolowy.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId.Equals(id));
+                    AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId ==id);
                     if(airLine!=null)
                     {
                         airLine.Name = request.Name;
@@ -179,7 +180,7 @@ namespace ProjektZespolowy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId.Equals(id));
+            AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId ==id);
             if (airLine == null)
             {
                 return HttpNotFound();
@@ -200,7 +201,7 @@ namespace ProjektZespolowy.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId.Equals(id));
+            AirLine airLine = db.AirLines.FirstOrDefault(p => p.PublicId ==id);
             airLine.IsActive = false;
 
             db.Entry(airLine).State = EntityState.Modified;

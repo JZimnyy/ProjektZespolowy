@@ -6,9 +6,12 @@
 
 <h2>Lista linii lotniczych</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+{
+    <p>
+        @Html.ActionLink("Dodaj", "Create")
+    </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -20,20 +23,31 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Country)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PublicId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PublicId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PublicId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <a href="@item.LinkToPage" target="_blank">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Country)
+            </td>
+            <td>
+                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                {
+                    <span>@Html.ActionLink("Edytuj", "Edit", new { id = item.PublicId }) |</span>
+                }
+                @Html.ActionLink("Szczegóły", "Details", new { id = item.PublicId })
+                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                {
+                    <span>
+                        | @Html.ActionLink("Usuń", "Delete", new { id = item.PublicId })
+                    </span>
+                }
+            </td>
+        </tr>
+    }
 
 </table>
