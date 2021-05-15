@@ -47,7 +47,7 @@ namespace ProjektZespolowy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Airport airport = db.Airports.FirstOrDefault(p=>p.Equals(code));
+            Airport airport = db.Airports.FirstOrDefault(p=>p.Code.Equals(code));
             if (airport == null)
             {
                 return HttpNotFound();
@@ -87,7 +87,7 @@ namespace ProjektZespolowy.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    Airport newAirport = new Airport { Name = airport.Name, Code = airport.Code, PublicId = Guid.NewGuid()};
+                    Airport newAirport = new Airport { Name = airport.Name, Code = airport.Code, PublicId = Guid.NewGuid(), IsActive = true};
                     db.Airports.Add(newAirport);
                     db.SaveChanges();
                     return RedirectToAction("Index");

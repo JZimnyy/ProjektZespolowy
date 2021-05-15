@@ -106,7 +106,8 @@ namespace ProjektZespolowy.Controllers
                         AirLineId = request.AirLineId,
                         AirLine = db.AirLines.Find(request.AirLineId),
                         StartAirportCode = request.StartAirportCode,
-                        FinishAirportCode = request.FinishAirportCode
+                        FinishAirportCode = request.FinishAirportCode,
+                        IsActive = true
                     };
 
                     db.AirRoutes.Add(airRoute);
