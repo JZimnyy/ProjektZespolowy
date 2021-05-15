@@ -1,12 +1,12 @@
-﻿@model ProjektZespolowy.Models.AirRoute
+﻿@model ProjektZespolowy.Models.AirRoutes.AirRouteViewModel
 
 @{
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<h2>Usuń</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Czy na pewno chcesz usunąć?</h3>
 <div>
     <h4>AirRoute</h4>
     <hr />
@@ -20,27 +20,19 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.PublicId)
+            @Html.DisplayNameFor(model => model.StartAirport)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PublicId)
+            @Html.DisplayFor(model => model.StartAirport)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.StartAirportCode)
+            @Html.DisplayNameFor(model => model.FinishAirport)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.StartAirportCode)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.FinishAirportCode)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FinishAirportCode)
+            @Html.DisplayFor(model => model.FinishAirport)
         </dd>
 
     </dl>
@@ -49,8 +41,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Usuń" class="btn btn-default" /> |
+            @Html.ActionLink("Powrót do listy", "Index")
         </div>
     }
 </div>

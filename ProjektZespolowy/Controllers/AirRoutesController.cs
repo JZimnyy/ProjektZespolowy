@@ -18,7 +18,7 @@ namespace ProjektZespolowy.Controllers
         // GET: AirRoutes
         public ActionResult Index()
         {
-            var airRoutes = db.AirRoutes.Include(a => a.AirLine).Where(p=>p.IsActive == true).ToList();
+            var airRoutes = db.AirRoutes.Include(a => a.AirLine).Where(p=>p.IsActive == true);
 
             List<AirRouteViewModel> model = new List<AirRouteViewModel>();
 
@@ -28,8 +28,8 @@ namespace ProjektZespolowy.Controllers
                 {
                     AirLine = airRoute.AirLine,
                     PublicId = airRoute.PublicId,
-                    StartAirport = db.Airports.FirstOrDefault(p => p.Code.Equals(airRoute.StartAirportCode)),
-                    FinishAirport = db.Airports.FirstOrDefault(p => p.Code.Equals(airRoute.FinishAirportCode))
+                    StartAirport = airRoute.StartAirportCode,
+                    FinishAirport = airRoute.FinishAirportCode
                 };
                 model.Add(route);
             }
@@ -46,7 +46,7 @@ namespace ProjektZespolowy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId.Equals(id));
+            AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId ==id);
             if (airRoute == null)
             {
                 return HttpNotFound();
@@ -56,8 +56,8 @@ namespace ProjektZespolowy.Controllers
             {
                 PublicId = airRoute.PublicId,
                 AirLine = airRoute.AirLine,
-                StartAirport = db.Airports.FirstOrDefault(p => p.Code.Equals(airRoute.StartAirportCode)),
-                FinishAirport = db.Airports.FirstOrDefault(p => p.Code.Equals(airRoute.FinishAirportCode))
+                StartAirport = airRoute.StartAirportCode,
+                FinishAirport = airRoute.FinishAirportCode
             };
 
             return View(model);
@@ -69,8 +69,8 @@ namespace ProjektZespolowy.Controllers
         public ActionResult Create()
         {
             ViewBag.AirLineId = new SelectList(db.AirLines, "AirLineId", "Name");
-            ViewBag.StartAirPortsId = new SelectList(db.Airports,"Code","Name");
-            ViewBag.FinishAirPortsId = new SelectList(db.Airports,"Code","Name");
+            ViewBag.StartAirportCode = new SelectList(db.Airports,"Code","Name");
+            ViewBag.FinishAirportCode = new SelectList(db.Airports,"Code","Name");
             return View();
         }
 
@@ -81,37 +81,47 @@ namespace ProjektZespolowy.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "AirLineId,StartAirportCode,FinishAirportCode")] AirRouteFormModel request)
         {
-            if (ModelState.IsValid)
+            try
             {
-                if(request.StartAirportCode.Equals(request.FinishAirportCode))
+                ViewBag.AirLineId = new SelectList(db.AirLines, "AirLineId", "Name", request.AirLineId);
+                ViewBag.StartAirportCode = new SelectList(db.Airports, "Code", "Name", request.StartAirportCode);
+                ViewBag.FinishAirportCode = new SelectList(db.Airports, "Code", "Name", request.FinishAirportCode);
+
+                if (ModelState.IsValid)
                 {
-                    return View(request);
+                    if (request.StartAirportCode.Equals(request.FinishAirportCode))
+                    {
+                        return View(request);
+                    }
+
+
+                    if (!db.AirLines.Where(p => p.AirLineId == request.AirLineId).Any() || !db.Airports.Where(p => p.Code.Equals(request.StartAirportCode)).Any() || !db.Airports.Where(p => p.Code.Equals(request.FinishAirportCode)).Any())
+                    {
+                        return View(request);
+                    }
+
+                    AirRoute airRoute = new AirRoute()
+                    {
+                        PublicId = Guid.NewGuid(),
+                        AirLineId = request.AirLineId,
+                        AirLine = db.AirLines.Find(request.AirLineId),
+                        StartAirportCode = request.StartAirportCode,
+                        FinishAirportCode = request.FinishAirportCode
+                    };
+
+                    db.AirRoutes.Add(airRoute);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
                 }
 
-
-                if(!db.AirLines.Where(p=>p.AirLineId == request.AirLineId).Any() || !db.Airports.Where(p=>p.Code.Equals(request.StartAirportCode)).Any() || !db.Airports.Where(p => p.Code.Equals(request.FinishAirportCode)).Any())
-                {
-                    return View(request);
-                }
-
-                AirRoute airRoute = new AirRoute()
-                {
-                    PublicId = Guid.NewGuid(),
-                    AirLineId = request.AirLineId,
-                    AirLine = db.AirLines.Find(request.AirLineId),
-                    StartAirportCode = request.StartAirportCode,
-                    FinishAirportCode = request.FinishAirportCode
-                };
-
-                db.AirRoutes.Add(airRoute);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return View(request);
+            }catch
+            {
+                ViewBag.AirLineId = new SelectList(db.AirLines, "AirLineId", "Name", request.AirLineId);
+                ViewBag.StartAirportCode = new SelectList(db.Airports, "Code", "Name", request.StartAirportCode);
+                ViewBag.FinishAirportCode = new SelectList(db.Airports, "Code", "Name", request.FinishAirportCode);
+                return View(request);
             }
-
-            ViewBag.AirLineId = new SelectList(db.AirLines, "AirLineId", "Name", request.AirLineId);
-            ViewBag.StartAirPortsId = new SelectList(db.Airports, "Code", "Name",request.StartAirportCode);
-            ViewBag.FinishAirPortsId = new SelectList(db.Airports, "Code", "Name",request.FinishAirportCode);
-            return View(request);
         }
         #endregion
 
@@ -123,7 +133,7 @@ namespace ProjektZespolowy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId.Equals(id));
+            AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId ==id);
             if (airRoute == null)
             {
                 return HttpNotFound();
@@ -137,8 +147,8 @@ namespace ProjektZespolowy.Controllers
             };
 
             ViewBag.AirLineId = new SelectList(db.AirLines, "AirLineId", "Name", model.AirLineId);
-            ViewBag.StartAirPortsId = new SelectList(db.Airports, "Code", "Name",model.StartAirportCode);
-            ViewBag.FinishAirPortsId = new SelectList(db.Airports, "Code", "Name",model.FinishAirportCode);
+            ViewBag.StartAirPortCode = new SelectList(db.Airports, "Code", "Name",model.StartAirportCode);
+            ViewBag.FinishAirPortCode = new SelectList(db.Airports, "Code", "Name",model.FinishAirportCode);
             return View(model);
         }
 
@@ -151,7 +161,11 @@ namespace ProjektZespolowy.Controllers
         {
             try
             {
-                if(id == Guid.Empty)
+                ViewBag.AirLineId = new SelectList(db.AirLines, "AirLineId", "Name", request.AirLineId);
+                ViewBag.StartAirPortCode = new SelectList(db.Airports, "Code", "Name", request.StartAirportCode);
+                ViewBag.FinishAirPortCode = new SelectList(db.Airports, "Code", "Name", request.FinishAirportCode);
+
+                if (id == Guid.Empty)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
@@ -170,13 +184,14 @@ namespace ProjektZespolowy.Controllers
                     }
 
 
-                    AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId.Equals(id));
+                    AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId ==id);
                     if(airRoute==null)
                     {
                         return HttpNotFound();
                     }
 
                     airRoute.AirLineId = request.AirLineId;
+                    airRoute.AirLine = db.AirLines.Find(request.AirLineId);
                     airRoute.StartAirportCode = request.StartAirportCode;
                     airRoute.FinishAirportCode = request.FinishAirportCode;
 
@@ -184,13 +199,13 @@ namespace ProjektZespolowy.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                ViewBag.AirLineId = new SelectList(db.AirLines, "AirLineId", "Name", request.AirLineId);
-                ViewBag.StartAirPortsId = new SelectList(db.Airports, "Code", "Name", request.StartAirportCode);
-                ViewBag.FinishAirPortsId = new SelectList(db.Airports, "Code", "Name", request.FinishAirportCode);
                 return View(request);
             }
-            catch
+            catch(Exception e)
             {
+                ViewBag.AirLineId = new SelectList(db.AirLines, "AirLineId", "Name", request.AirLineId);
+                ViewBag.StartAirPortCode = new SelectList(db.Airports, "Code", "Name", request.StartAirportCode);
+                ViewBag.FinishAirPortCode = new SelectList(db.Airports, "Code", "Name", request.FinishAirportCode);
                 return View(request);
             }
         }
@@ -204,7 +219,7 @@ namespace ProjektZespolowy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId.Equals(id));
+            AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId ==id);
             if (airRoute == null)
             {
                 return HttpNotFound();
@@ -213,8 +228,8 @@ namespace ProjektZespolowy.Controllers
             AirRouteViewModel model = new AirRouteViewModel()
             {
                 AirLine = airRoute.AirLine,
-                StartAirport = db.Airports.FirstOrDefault(p => p.Code.Equals(airRoute.StartAirportCode)),
-                FinishAirport = db.Airports.FirstOrDefault(p => p.Code.Equals(airRoute.FinishAirportCode))
+                StartAirport = airRoute.StartAirportCode,
+                FinishAirport = airRoute.FinishAirportCode
             };
 
             return View(model);
@@ -230,7 +245,7 @@ namespace ProjektZespolowy.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            AirRoute airRoute = db.AirRoutes.FirstOrDefault(p => p.PublicId.Equals(id));
+            AirRoute airRoute = db.AirRoutes.Include(p=>p.AirLine).FirstOrDefault(p => p.PublicId ==id);
             airRoute.IsActive = false;
 
             db.Entry(airRoute).State = EntityState.Modified;

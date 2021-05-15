@@ -1,51 +1,57 @@
-﻿@model IEnumerable<ProjektZespolowy.Models.AirRoute>
+﻿@model IEnumerable<ProjektZespolowy.Models.AirRoutes.AirRouteViewModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Trasy";
 }
 
 <h2>Trasy</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if(User.IsInRole("Admin") || User.IsInRole("Moderator"))
+{
+    <p>
+        @Html.ActionLink("Dodaj", "Create")
+    </p>
+}
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.AirLine.Name)
+            @Html.DisplayName("Linia lotnicza")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PublicId)
+            @Html.DisplayNameFor(model => model.StartAirport)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.StartAirportCode)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FinishAirportCode)
+            @Html.DisplayNameFor(model => model.FinishAirport)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.AirLine.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PublicId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartAirportCode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FinishAirportCode)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.AirRouteId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.AirRouteId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.AirRouteId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AirLine.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartAirport)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FinishAirport)
+            </td>
+            <td>
+                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                {
+                    <span>@Html.ActionLink("Edytuj", "Edit", new { id = item.PublicId }) |</span>
+                }
+                @Html.ActionLink("Szczegóły", "Details", new { id = item.PublicId })
+
+                @if(User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                {
+                    <span>| @Html.ActionLink("Usuń", "Delete", new { id = item.PublicId })</span>
+                }
+                
+            </td>
+        </tr>
+    }
 
 </table>

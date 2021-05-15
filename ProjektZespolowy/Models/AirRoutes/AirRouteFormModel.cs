@@ -24,8 +24,10 @@ namespace ProjektZespolowy.Models.AirRoutes
         [Required]
         public virtual AirLine AirLine { get; set; }
         [Required]
-        public virtual Airport StartAirport { get; set; }
+        [Display(Name ="Lotnisko startowe")]
+        public string StartAirport { get; set; }
         [Required]
-        public virtual Airport FinishAirport { get; set; }
+        [Display(Name ="Lotnisko docelowe")]
+        public string FinishAirport { get; set; }
     }
 }

@@ -128,7 +128,7 @@ namespace ProjektZespolowy.Controllers
                         Price = request.Price
                     };
 
-                    if(flight.DepartureDate>=flight.ArrivalDate)
+                    if(flight.DepartureDate>=flight.ArrivalDate || flight.DepartureDate<DateTime.Now || flight.ArrivalDate<DateTime.Now)
                     {
                         ViewBag.Error = "Niezgodne daty";
                         return View(request);
