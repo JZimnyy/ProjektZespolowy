@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjektZespolowy.Models.Ticket>
+﻿@model IEnumerable<ProjektZespolowy.Models.Tickets.TicketViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -6,40 +6,50 @@
 
 <h2>Bilety</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Flight.FlightId)
+            @Html.DisplayName("Lot")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Passenger.FirstName)
+            @Html.DisplayName("Pasażer")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PublicId)
+            @Html.DisplayName("Data odlotu")
+        </th>
+        <th>
+            @Html.DisplayName("Data przylotu")
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Flight.FlightId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Passenger.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PublicId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.TicketId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.TicketId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TicketId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Flight.AirRoute.StartAirportCode) - @Html.DisplayFor(modelItem => item.Flight.AirRoute.FinishAirportCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Passenger.FirstName) @Html.DisplayFor(modelItem => item.Passenger.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Flight.DepartureDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Flight.ArrivalDate)
+            </td>
+            <td>
+                
+                @Html.ActionLink("Szczegóły", "Details", new { id = item.PublicId }) 
+
+                @if(item.Flight.DepartureDate>DateTime.Now)
+                {
+                    <span>
+                        | @Html.ActionLink("Usuń", "Delete", new { id = item.PublicId })
+                    </span>
+                }
+            </td>
+        </tr>
+    }
 
 </table>

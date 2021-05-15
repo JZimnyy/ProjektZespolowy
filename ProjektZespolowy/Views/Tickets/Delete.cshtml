@@ -1,38 +1,62 @@
-﻿@model ProjektZespolowy.Models.Ticket
+﻿@model ProjektZespolowy.Models.Tickets.TicketViewModel
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Usuń";
 }
 
-<h2>Delete</h2>
+<h2>Usuń</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Czy chcesz anulować rezerwację?</h3>
 <div>
     <h4>Ticket</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Flight.FlightId)
+            @Html.DisplayName("Lot")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Flight.FlightId)
+            @Html.DisplayFor(model => model.Flight.AirRoute.StartAirportCode) -  @Html.DisplayFor(model => model.Flight.AirRoute.FinishAirportCode)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Passenger.FirstName)
+            @Html.DisplayName("Linia lotnicza")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Passenger.FirstName)
+            @Html.DisplayFor(model => model.Flight.AirRoute.AirLine.Name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.PublicId)
+            @Html.DisplayName("Data odlotu: ")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PublicId)
+            @Html.DisplayFor(model => model.Flight.DepartureDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Data przylotu: ")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Flight.ArrivalDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Cena: ")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Flight.Price) PLN
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Pasażer")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Passenger.FirstName) @Html.DisplayFor(model => model.Passenger.LastName)
         </dd>
 
     </dl>

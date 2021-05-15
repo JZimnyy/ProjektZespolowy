@@ -54,7 +54,7 @@
             @Html.DisplayFor(modelItem => item.NumberOfFreeSeats)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Price)
+            @Html.DisplayFor(modelItem => item.Price) PLN
         </td>
         <td>
             @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
@@ -63,7 +63,11 @@
                     @Html.ActionLink("Edytuj", "Edit", new { id = item.PublicId }) |
                 </span>
             }
-
+            @if(item.DepartureDate>DateTime.Now)
+                {
+        <span>@Html.ActionLink("Kup bilet", "Create/" + item.PublicId, "Tickets") |</span>
+                }
+            
             @Html.ActionLink("Szczegóły", "Details", new { id = item.PublicId })
             @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
             {
