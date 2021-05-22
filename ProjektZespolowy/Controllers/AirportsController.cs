@@ -18,11 +18,33 @@ namespace ProjektZespolowy.Controllers
         // GET: Airports
         public ActionResult Index()
         {
-            List<Airport> airports = db.Airports.Where(p=>p.IsActive == true).ToList();
+            
+            return View();
+        }
+        #endregion
+
+        #region AirportsList(search,code)
+        public ActionResult AirportsList(string search,string code)
+        {
+            List<Airport> airports = db.Airports.Where(p => p.IsActive == true).ToList();
+
+            if(search!=String.Empty && search!=null)
+            {
+                if(code!=null && code!=String.Empty)
+                {
+                    airports = db.Airports.Where(p => p.IsActive == true && p.Name.Contains(search) && p.Code.Contains(code)).ToList();
+                }else
+                {
+                airports = db.Airports.Where(p => p.IsActive == true && p.Name.Contains(search)).ToList();
+                }
+            }else if(code!=null && code!=String.Empty)
+            {
+                airports = db.Airports.Where(p => p.IsActive == true && p.Code.Contains(code)).ToList();
+            }
 
             List<AirPortViewModel> airportsViewModel = new List<AirPortViewModel>();
 
-            foreach(Airport airport in airports)
+            foreach (Airport airport in airports)
             {
                 AirPortViewModel ap = new AirPortViewModel();
                 ap.Name = airport.Name;
@@ -34,8 +56,7 @@ namespace ProjektZespolowy.Controllers
                 airportsViewModel.Add(ap);
             }
 
-
-            return View(airportsViewModel.ToList());
+            return PartialView(airportsViewModel);
         }
         #endregion
 

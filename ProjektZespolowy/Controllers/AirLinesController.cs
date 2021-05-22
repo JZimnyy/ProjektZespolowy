@@ -19,11 +19,24 @@ namespace ProjektZespolowy.Controllers
         // GET: AirLines
         public ActionResult Index()
         {
-            List<AirLine> airLines = db.AirLines.Include(p=>p.Routes).Where(p=>p.IsActive == true).ToList();
+            
+            return View();
+        }
+        #endregion
+
+        #region AirLineList(search)
+        public ActionResult AirLineList(string search)
+        {
+            var list = db.AirLines.Include(p => p.Routes).Where(p => p.IsActive == true).ToList();
+
+            if (search != String.Empty && search != null)
+            {
+                list = db.AirLines.Where(p => p.Name.Contains(search)).Include(p => p.Routes).Where(p => p.IsActive == true).ToList();
+            }
 
             List<AirlineViewModel> airlineViewModels = new List<AirlineViewModel>();
 
-            foreach(var airline in airLines)
+            foreach (var airline in list)
             {
                 AirlineViewModel model = new AirlineViewModel()
                 {
@@ -36,7 +49,8 @@ namespace ProjektZespolowy.Controllers
                 airlineViewModels.Add(model);
             }
 
-            return View(airlineViewModels);
+            return PartialView(airlineViewModels);
+
         }
         #endregion
 

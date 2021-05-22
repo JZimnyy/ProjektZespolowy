@@ -6,48 +6,20 @@
 
 <h2>Lista linii lotniczych</h2>
 
-@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+@using (Ajax.BeginForm(new AjaxOptions
 {
-    <p>
-        @Html.ActionLink("Dodaj", "Create")
-    </p>
+    Url = Url.Action("AirLineList", "AirLines"),
+    HttpMethod = "get",
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "AirlinesList"
+}))
+{
+    <div class="form-group form-inline">
+        <input type="text" name="search" class="form-control" placeholder="Nazwa linii lotniczej" />
+        <input type="submit" value="Szukaj" class="btn btn-primary" />
+    </div>
 }
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Country)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                <a href="@item.LinkToPage" target="_blank">
-                    @Html.DisplayFor(modelItem => item.Name)
-                </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country)
-            </td>
-            <td>
-                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
-                {
-                    <span>@Html.ActionLink("Edytuj", "Edit", new { id = item.PublicId }) |</span>
-                }
-                @Html.ActionLink("Szczegóły", "Details", new { id = item.PublicId })
-                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
-                {
-                    <span>
-                        | @Html.ActionLink("Usuń", "Delete", new { id = item.PublicId })
-                    </span>
-                }
-            </td>
-        </tr>
-    }
-
-</table>
+<div id="AirlinesList">
+    @Html.Action("AirLineList", "AirLines")
+</div>

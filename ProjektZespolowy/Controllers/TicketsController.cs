@@ -12,15 +12,17 @@ using ProjektZespolowy.Models.Tickets;
 
 namespace ProjektZespolowy.Controllers
 {
+    [Authorize]
     public class TicketsController : BaseController
     {
         #region Index()
+        
         // GET: Tickets
         public ActionResult Index()
         {
             var user = db.Users.Where(u => u.UserName == User.Identity.Name).First();
 
-            var tickets = db.Tickets.Include(t => t.Flight).Include(t => t.Passenger).Where(t=>t.Passenger.User.Id == user.Id);
+            var tickets = db.Tickets.Include(t => t.Flight).Include(t => t.Passenger).Where(t=>t.Passenger.User.Id == user.Id && t.Flight.ArrivalDate >DateTime.Now);
 
             List<TicketViewModel> list = new List<TicketViewModel>();
 
@@ -37,7 +39,7 @@ namespace ProjektZespolowy.Controllers
                 list.Add(model);
             }
 
-            return View(list.ToList());
+            return View(list.OrderBy(p=>p.Flight.DepartureDate).ToList());
         }
         #endregion
 

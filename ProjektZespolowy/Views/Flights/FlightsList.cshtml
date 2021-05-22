@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ProjektZespolowy.Models.Flights.FlightViewModel>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+{
+    <p>
+        @Html.ActionLink("Dodaj lot", "Create")
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Lotnisko startowe")
+        </th>
+        <th>
+            @Html.DisplayName("Lotnisko docelowe")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartureDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ArrivalDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberOfFreeSeats)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AirRoute.StartAirportCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AirRoute.FinishAirportCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArrivalDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberOfFreeSeats)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price) PLN
+            </td>
+            <td>
+                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                {
+                    <span>
+                        @Html.ActionLink("Edytuj", "Edit", new { id = item.PublicId }) |
+                    </span>
+                }
+                @if (item.DepartureDate > DateTime.Now)
+                {
+                    <span>@Html.ActionLink("Kup bilet", "Create/" + item.PublicId, "Tickets") |</span>
+                }
+
+                @Html.ActionLink("Szczegóły", "Details", new { id = item.PublicId })
+                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                {
+                    <span>
+                        | @Html.ActionLink("Usuń", "Delete", new { id = item.PublicId })
+                    </span>
+                }
+
+            </td>
+        </tr>
+    }
+
+</table>

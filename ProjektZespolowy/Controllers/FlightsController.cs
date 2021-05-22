@@ -20,11 +20,25 @@ namespace ProjektZespolowy.Controllers
         // GET: Flights
         public ActionResult Index()
         {
+           
+            ViewBag.Routes = db.AirRoutes.Where(p => p.IsActive == true).ToList();
+
+            return View();
+        }
+        #endregion
+
+        public ActionResult FlightsList(int? routeId)
+        {
             var flights = db.Flights.Include(f => f.AirRoute);
+
+            if(routeId.HasValue)
+            {
+               flights = db.Flights.Include(f => f.AirRoute).Where(p => p.AirRouteId == routeId);
+            }
 
             List<FlightViewModel> list = new List<FlightViewModel>();
 
-            foreach(var flight in flights)
+            foreach (var flight in flights)
             {
                 FlightViewModel model = new FlightViewModel()
                 {
@@ -40,9 +54,8 @@ namespace ProjektZespolowy.Controllers
                 list.Add(model);
             }
 
-            return View(list.ToList());
+            return PartialView(list.ToList());
         }
-        #endregion
 
         #region Details()
         // GET: Flights/Details/5

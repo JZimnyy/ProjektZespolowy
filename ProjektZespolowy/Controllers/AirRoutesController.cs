@@ -18,11 +18,40 @@ namespace ProjektZespolowy.Controllers
         // GET: AirRoutes
         public ActionResult Index()
         {
-            var airRoutes = db.AirRoutes.Include(a => a.AirLine).Where(p=>p.IsActive == true);
+            
+            var airports = db.Airports.Where(p => p.IsActive == true).ToList();
+            ViewBag.Start = airports;
+            ViewBag.Finish = airports;
+
+            return View();
+        }
+        #endregion
+
+        #region AirRoutesList(startCode,finishCode)
+        public ActionResult AirRoutesList(string startCode, string finishCode)
+        {
+            var airRoutes = db.AirRoutes.Include(a => a.AirLine).Where(p => p.IsActive == true);
+
+            if (startCode != null && startCode!=String.Empty)
+            {
+                if(finishCode!=null && finishCode!=String.Empty)
+                {
+                    airRoutes = db.AirRoutes.Include(a => a.AirLine).Where(p => p.IsActive == true && p.StartAirportCode == startCode && p.FinishAirportCode == finishCode);
+                }
+                else
+                {
+                    airRoutes = db.AirRoutes.Include(a => a.AirLine).Where(p => p.IsActive == true && p.StartAirportCode == startCode);
+                }
+
+            }
+            else if(finishCode != null && finishCode != String.Empty)
+            {
+                airRoutes = db.AirRoutes.Include(a => a.AirLine).Where(p => p.IsActive == true && p.FinishAirportCode == finishCode);
+            }
 
             List<AirRouteViewModel> model = new List<AirRouteViewModel>();
 
-            foreach(var airRoute in airRoutes)
+            foreach (var airRoute in airRoutes)
             {
                 AirRouteViewModel route = new AirRouteViewModel()
                 {
@@ -34,7 +63,7 @@ namespace ProjektZespolowy.Controllers
                 model.Add(route);
             }
 
-            return View(model.ToList());
+            return PartialView(model.ToList());
         }
         #endregion
 
